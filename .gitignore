@@ -1,0 +1,5 @@
+target/
+out/
+.*.sw*
+.idea
+*.iml
