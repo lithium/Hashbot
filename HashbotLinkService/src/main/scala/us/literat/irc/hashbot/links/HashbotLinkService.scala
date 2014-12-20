@@ -7,7 +7,7 @@ import org.apache.camel.{EndpointInject, Exchange, ProducerTemplate}
 import com.ocpsoft.pretty.time.PrettyTime
 import org.osgi.framework.{BundleActivator, BundleContext}
 import org.slf4j.LoggerFactory
-import us.literat.irc.hashbot.ReceivesIrcMessages
+import us.literat.irc.hashbot.support.ReceivesIrcMessages
 import us.literat.irc.hashbot.links.model.Link
 import us.literat.irc.hashbot.links.repository.LinkRepository
 
@@ -19,9 +19,6 @@ import scala.beans.BeanProperty
 class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
 {
   val log = LoggerFactory.getLogger(getClass)
-
-  @EndpointInject(ref="ircEndpoint")
-  var producer:ProducerTemplate = _
 
   @BeanProperty
   var linkRepo:LinkRepository = _
@@ -36,8 +33,6 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
   @BeanProperty
   var urlQueryPrefix:String = _
 
-  var prettyTime:PrettyTime = new PrettyTime()
-
   override def start(context: BundleContext): Unit = {
     context.registerService(classOf[HashbotLinkService].getName, this, null)
   }
@@ -45,7 +40,7 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
   override def stop(context: BundleContext): Unit = {
   }
 
-  override def receiveIrcMessage(body:String, exchange:Exchange, msg:IrcMessage): Unit = {
+  override def receiveIrcMessage(msg:IrcMessage, exchange:Exchange, endpoint:ProducerTemplate): Unit = {
     val txt:String = msg.getMessage
     if (txt startsWith urlQueryPrefix+" ") {
 
@@ -60,7 +55,7 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
         linkRepo.findAllByUriRegex(pat, linkLimit)
       }
       val responseText = links.map(_.getUri).mkString("  ")
-      producer.sendBody(msg.getUser.getNick+": "+(if (links.size > 0) responseText else "no matches."))
+      endpoint.sendBody(msg.getUser.getNick+": "+(if (links.size > 0) responseText else "no matches."))
     }
     else {
 
@@ -84,14 +79,15 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
       }).toSet.filter(_.isDefined).map(_.get)
 
       if (reposts.size > 1) {
-        producer.sendBody("Nice reposts " + msg.getUser.getNick + ".")
+        endpoint.sendBody("Nice reposts " + msg.getUser.getNick + ".")
       } else if (reposts.size > 0) {
         val link:Link = reposts.head
         val repostMsg = if (link.getOriginalPostDate != null) {
-          (if (link.getNick == msg.getUser.getNick) "You" else link.getNick)+" already posted that "+prettyTime.format(link.getOriginalPostDate)+"."
+          (if (link.getNick == msg.getUser.getNick) "You" else link.getNick)+
+            " already posted that "+(new PrettyTime().format(link.getOriginalPostDate))+"."
         } else ""
 
-        producer.sendBody("Nice repost "+msg.getUser.getNick+". "+repostMsg)
+        endpoint.sendBody("Nice repost "+msg.getUser.getNick+". "+repostMsg)
       }
 
 

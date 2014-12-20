@@ -25,10 +25,9 @@
     </camel:camelContext>
 
     <!-- irc message dispatcher -->
-    <bean id="hashbotDispatcher" class="us.literat.irc.hashbot.HashbotDispatcher">
+    <bean id="hashbotDispatcher" class="us.literat.irc.hashbot.dispatch.HashbotDispatcher">
         <property name="nicksToIgnore" value="${hashbot.nicksToIgnore}"/>
         <property name="bundleContext" ref="blueprintBundleContext"/>
     </bean>
-
 
 </blueprint>

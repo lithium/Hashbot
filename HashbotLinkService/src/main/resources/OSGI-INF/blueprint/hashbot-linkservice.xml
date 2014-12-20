@@ -6,23 +6,20 @@
        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        ">
 
-  <cm:property-placeholder id="dbProperties" persistent-id="us.literat.irc.hashbot.db">
+  <cm:property-placeholder id="properties" persistent-id="us.literat.irc.hashbot.links">
     <cm:default-properties>
+      <cm:property name="hashbot.links.linkLimit" value="5"/>
+      <cm:property name="hashbot.links.uriRegex" value="(https?|ftp)://[^\s/$.?#].[^\s]*"/>
+      <cm:property name="hashbot.links.urlQueryPrefix" value="_url"/>
+
       <cm:property name="hashbot.db.mongo.host" value="127.0.0.1"/>
       <cm:property name="hashbot.db.mongo.port" value="27017"/>
       <cm:property name="hashbot.db.mongo.database" value="hashbot"/>
     </cm:default-properties>
   </cm:property-placeholder>
 
-  <cm:property-placeholder id="properties" persistent-id="us.literat.irc.hashbot.links">
-    <cm:default-properties>
-      <cm:property name="hashbot.links.linkLimit" value="5"/>
-      <cm:property name="hashbot.links.uriRegex" value="(https?|ftp)://[^\s/$.?#].[^\s]*"/>
-      <cm:property name="hashbot.links.urlQueryPrefix" value="_url"/>
-    </cm:default-properties>
-  </cm:property-placeholder>
-
   <!-- link scraper service -->
+  <service ref="linkService" interface="us.literat.irc.hashbot.support.ReceivesIrcMessages"/>
   <bean id="linkService" class="us.literat.irc.hashbot.links.HashbotLinkService">
     <property name="linkRepo" ref="linkRepo"/>
     <property name="linkLimit" value="${hashbot.links.linkLimit}"/>

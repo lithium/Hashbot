@@ -61,11 +61,7 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Private-Package>us.literat.irc.hashbot.links</Private-Package>
-            <Embed-Dependency>ocpsoft-pretty-time;scope=compile|runtime</Embed-Dependency>
-            <Bundle-Activator>us.literat.irc.hashbot.links.HashbotLinkService</Bundle-Activator>
-            <Import-Package>!javax.faces,*</Import-Package>
-          </instructions>
+         </instructions>
         </configuration>
       </plugin>
 

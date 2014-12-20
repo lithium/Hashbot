@@ -19,20 +19,29 @@
     <camel.version>2.14.0</camel.version>
     <scala.version>2.11.4</scala.version>
     <log4j.version>2.1</log4j.version>
+    <osgi.version>4.3.1</osgi.version>
   </properties>
 
 
   <modules>
+    <module>HashbotSupport</module>
     <module>HashbotDispatcher</module>
     <module>HashbotLinkService</module>
   </modules>
 
   <dependencies>
+
+
     <!-- osgi -->
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
-      <version>4.3.0</version>
+      <version>${osgi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>${osgi.version}</version>
     </dependency>
 
     <!-- camel -->
