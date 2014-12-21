@@ -16,7 +16,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <camel.version>2.14.0</camel.version>
+    <camel.version>2.15-hashbot</camel.version>
     <scala.version>2.11.4</scala.version>
     <log4j.version>2.1</log4j.version>
     <osgi.version>4.3.1</osgi.version>
@@ -76,12 +76,12 @@
     </dependency>
 
     <!-- testing -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-test-blueprint</artifactId>
-      <version>${camel.version}</version>
-      <scope>test</scope>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.apache.camel</groupId>-->
+      <!--<artifactId>camel-test-blueprint</artifactId>-->
+      <!--<version>${camel.version}</version>-->
+      <!--<scope>test</scope>-->
+    <!--</dependency>-->
 
   </dependencies>
 
