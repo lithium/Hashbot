@@ -27,6 +27,7 @@
     <module>HashbotSupport</module>
     <module>HashbotDispatcher</module>
     <module>HashbotLinkService</module>
+    <module>HashbotMatcherService</module>
   </modules>
 
   <dependencies>
