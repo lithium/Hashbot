@@ -11,6 +11,7 @@
       <cm:property name="hashbot.links.linkLimit" value="5"/>
       <cm:property name="hashbot.links.uriRegex" value="(https?|ftp)://[^\s/$.?#].[^\s]*"/>
       <cm:property name="hashbot.links.urlQueryPrefix" value="_url"/>
+      <cm:property name="hashbot.links.mentionReposts" value="true"/>
 
       <cm:property name="hashbot.db.mongo.host" value="127.0.0.1"/>
       <cm:property name="hashbot.db.mongo.port" value="27017"/>
@@ -25,6 +26,7 @@
     <property name="linkLimit" value="${hashbot.links.linkLimit}"/>
     <property name="uriRegex" value="${hashbot.links.uriRegex}"/>
     <property name="urlQueryPrefix" value="${hashbot.links.urlQueryPrefix}"/>
+    <property name="mentionReposts" value="${hashbot.links.mentionReposts}"/>
   </bean>
 
   <!-- model -->

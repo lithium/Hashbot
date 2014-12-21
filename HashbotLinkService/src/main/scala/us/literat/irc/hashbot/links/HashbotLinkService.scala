@@ -33,6 +33,9 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
   @BeanProperty
   var urlQueryPrefix:String = _
 
+  @BeanProperty
+  var mentionReposts:Boolean = _
+
   override def start(context: BundleContext): Unit = {
     context.registerService(classOf[HashbotLinkService].getName, this, null)
   }
@@ -41,6 +44,10 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
   }
 
   override def receiveIrcMessage(msg:IrcMessage, exchange:Exchange, endpoint:ProducerTemplate): Unit = {
+    if (!msg.getMessageType.equals("PRIVMSG")) {
+      return
+    }
+
     val txt:String = msg.getMessage
     if (txt startsWith urlQueryPrefix+" ") {
 
@@ -78,16 +85,21 @@ class HashbotLinkService extends BundleActivator with ReceivesIrcMessages
         }
       }).toSet.filter(_.isDefined).map(_.get)
 
-      if (reposts.size > 1) {
-        endpoint.sendBody("Nice reposts " + msg.getUser.getNick + ".")
-      } else if (reposts.size > 0) {
-        val link:Link = reposts.head
-        val repostMsg = if (link.getOriginalPostDate != null) {
-          (if (link.getNick == msg.getUser.getNick) "You" else link.getNick)+
-            " already posted that "+(new PrettyTime().format(link.getOriginalPostDate))+"."
-        } else ""
+      if (mentionReposts) {
 
-        endpoint.sendBody("Nice repost "+msg.getUser.getNick+". "+repostMsg)
+
+        if (reposts.size > 1) {
+          endpoint.sendBody("Nice reposts " + msg.getUser.getNick + ".")
+        } else if (reposts.size > 0) {
+          val link:Link = reposts.head
+          val repostMsg = if (link.getOriginalPostDate != null) {
+            (if (link.getNick == msg.getUser.getNick) "You" else link.getNick)+
+              " already posted that "+(new PrettyTime().format(link.getOriginalPostDate))+"."
+          } else ""
+
+          endpoint.sendBody("Nice repost "+msg.getUser.getNick+". "+repostMsg)
+        }
+
       }
 
 

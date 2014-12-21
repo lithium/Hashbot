@@ -14,7 +14,7 @@
 
   <groupId>us.literat.irc.hashbot</groupId>
   <artifactId>HashbotLinkService</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <dependencies>
     <dependency>
@@ -64,7 +64,6 @@
          </instructions>
         </configuration>
       </plugin>
-
 
     </plugins>
   </build>
