@@ -28,7 +28,8 @@
             <artifactId>HashbotSupport</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-    </dependencies>
+
+   </dependencies>
 
     <build>
         <plugins>
@@ -44,6 +45,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.name}</Bundle-Name>
                         <Bundle-Version>${project.version}</Bundle-Version>
+                        <Export-Package>us.literat.irc.hashbot.matcher.*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

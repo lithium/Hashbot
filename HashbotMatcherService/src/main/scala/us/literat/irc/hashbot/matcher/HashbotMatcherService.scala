@@ -15,7 +15,7 @@ import collection.JavaConversions._
 class HashbotMatcherService extends ReceivesIrcMessages
 {
   @BeanInject
-  val matchRepo: MatchRepository = _
+  var matchRepo: MatchRepository = _
 
   override def receiveIrcMessage(message: IrcMessage, exchange: Exchange, endpoint: ProducerTemplate): Unit = {
     if (!message.getMessageType.equals("PRIVMSG")) {

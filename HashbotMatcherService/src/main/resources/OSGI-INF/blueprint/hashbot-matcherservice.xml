@@ -2,17 +2,13 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
            xsi:schemaLocation="
        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        ">
 
-  <cm:property-placeholder id="properties" persistent-id="us.literat.irc.hashbot.links">
+  <cm:property-placeholder id="properties" persistent-id="us.literat.irc.hashbot.matcher">
     <cm:default-properties>
-      <!--<cm:property name="hashbot.matcher.linkLimit" value="5"/>-->
-      <!--<cm:property name="hashbot.links.uriRegex" value="(https?|ftp)://[^\s/$.?#].[^\s]*"/>-->
-      <!--<cm:property name="hashbot.links.urlQueryPrefix" value="_url"/>-->
-      <!--<cm:property name="hashbot.links.mentionReposts" value="true"/>-->
-
       <cm:property name="hashbot.db.mongo.host" value="127.0.0.1"/>
       <cm:property name="hashbot.db.mongo.port" value="27017"/>
       <cm:property name="hashbot.db.mongo.database" value="hashbot"/>
@@ -20,11 +16,19 @@
   </cm:property-placeholder>
 
   <!-- matcher service -->
-  <bean id="matcherService" class="us.literat.irc.hashbot.links.HashbotMatcherService"/>
+  <bean id="matcherService" class="us.literat.irc.hashbot.matcher.HashbotMatcherService"/>
   <service ref="matcherService" interface="us.literat.irc.hashbot.support.ReceivesIrcMessages"/>
 
+  <!-- management mbean -->
+  <bean id="matcherManager" class="us.literat.irc.hashbot.matcher.jmx.HashbotMatcherManager"/>
+  <service ref="matcherManager" auto-export="interfaces">
+      <service-properties>
+          <entry key="jmx.objectname" value="us.literat.irc.hashbot.matcher:type=HashbotMatcherManager"/>
+      </service-properties>
+  </service>
 
-  <!-- model -->
+
+ <!-- model -->
   <bean id="matchRepo" class="us.literat.irc.hashbot.matcher.repository.MatchRepository"/>
 
 
