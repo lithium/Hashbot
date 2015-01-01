@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       ">
+
+  <cm:property-placeholder id="properties" persistent-id="us.literat.irc.hashbot.matcher">
+    <cm:default-properties>
+      <cm:property name="hashbot.db.mongo.host" value="127.0.0.1"/>
+      <cm:property name="hashbot.db.mongo.port" value="27017"/>
+      <cm:property name="hashbot.db.mongo.database" value="hashbot"/>
+    </cm:default-properties>
+  </cm:property-placeholder>
+
+  <!-- matcher service -->
+  <bean id="matcherService" class="us.literat.irc.hashbot.matcher.HashbotMatcherService">
+      <property name="matchRepo" ref="matchRepo"/>
+  </bean>
+  <service ref="matcherService" interface="us.literat.irc.hashbot.support.ReceivesIrcMessages"/>
+
+  <!-- management mbean -->
+  <bean id="matcherManager" class="us.literat.irc.hashbot.matcher.jmx.HashbotMatcherManager">
+      <property name="matchRepo" ref="matchRepo"/>
+  </bean>
+
+  <service ref="matcherManager" auto-export="interfaces">
+      <service-properties>
+          <entry key="jmx.objectname" value="us.literat.irc.hashbot.matcher:type=HashbotMatcherManager"/>
+      </service-properties>
+  </service>
+
+
+ <!-- model -->
+  <bean id="matchRepo" class="us.literat.irc.hashbot.matcher.repository.MatchRepository">
+      <property name="mongoDb" ref="mongoDb"/>
+  </bean>
+
+
+  <!-- mongo/morphia -->
+  <bean id="mongoClient" class="com.mongodb.MongoClient">
+    <argument value="${hashbot.db.mongo.host}"/>
+    <argument value="${hashbot.db.mongo.port}"/>
+  </bean>
+
+  <bean id="morphia" factory-ref="morphiaFactory" factory-method="get"/>
+  <bean id="morphiaFactory" class="us.literat.mongodb.morphia.MorphiaFactory">
+    <property name="bundleContext" ref="blueprintBundleContext"/>
+    <property name="classes">
+      <list>
+        <value>us.literat.irc.hashbot.matcher.model.Match</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="mongoDb" factory-ref="datastoreFactory" factory-method="get"/>
+  <bean id="datastoreFactory" class="us.literat.mongodb.morphia.DatastoreFactory">
+    <property name="mongoClient" ref="mongoClient"/>
+    <property name="morphia" ref="morphia"/>
+    <property name="database" value="${hashbot.db.mongo.database}"/>
+  </bean>
+
+
+</blueprint>
