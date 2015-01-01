@@ -21,6 +21,7 @@ public class MatchHit {
         this.nick = nick;
         this.count = 1;
         this.firstTime = new Date();
+        this.lastTime = this.firstTime;
     }
 
     public String getNick() {
@@ -37,6 +38,9 @@ public class MatchHit {
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+    public void incrementCount() {
+        this.count += 1;
     }
 
     public Date getLastTime() {

@@ -14,8 +14,14 @@ import java.util.regex.Pattern;
  */
 public class MatchRepository {
 
-    @BeanInject
+
     private Datastore mongoDb;
+    public Datastore getMongoDb() {
+        return mongoDb;
+    }
+    public void setMongoDb(Datastore mongoDb) {
+        this.mongoDb = mongoDb;
+    }
 
 
     public Match findByKey(String key) {
@@ -31,4 +37,5 @@ public class MatchRepository {
     public void persist(Match match) {
         mongoDb.save(match);
     }
+
 }

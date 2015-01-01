@@ -16,11 +16,16 @@
   </cm:property-placeholder>
 
   <!-- matcher service -->
-  <bean id="matcherService" class="us.literat.irc.hashbot.matcher.HashbotMatcherService"/>
+  <bean id="matcherService" class="us.literat.irc.hashbot.matcher.HashbotMatcherService">
+      <property name="matchRepo" ref="matchRepo"/>
+  </bean>
   <service ref="matcherService" interface="us.literat.irc.hashbot.support.ReceivesIrcMessages"/>
 
   <!-- management mbean -->
-  <bean id="matcherManager" class="us.literat.irc.hashbot.matcher.jmx.HashbotMatcherManager"/>
+  <bean id="matcherManager" class="us.literat.irc.hashbot.matcher.jmx.HashbotMatcherManager">
+      <property name="matchRepo" ref="matchRepo"/>
+  </bean>
+
   <service ref="matcherManager" auto-export="interfaces">
       <service-properties>
           <entry key="jmx.objectname" value="us.literat.irc.hashbot.matcher:type=HashbotMatcherManager"/>
@@ -29,7 +34,9 @@
 
 
  <!-- model -->
-  <bean id="matchRepo" class="us.literat.irc.hashbot.matcher.repository.MatchRepository"/>
+  <bean id="matchRepo" class="us.literat.irc.hashbot.matcher.repository.MatchRepository">
+      <property name="mongoDb" ref="mongoDb"/>
+  </bean>
 
 
   <!-- mongo/morphia -->

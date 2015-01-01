@@ -3,13 +3,14 @@ package us.literat.irc.hashbot.matcher.model;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by wiggins on 12/20/14.
  */
-@Entity
+@Entity("matches")
 public class Match {
     @Id
     private String key;
@@ -22,9 +23,14 @@ public class Match {
     public Match() {}
 
     public Match(String key, String pattern, String createdBy) {
+        this(key,pattern,createdBy,new Date());
+    }
+    public Match(String key, String pattern, String createdBy, Date createdOn) {
         this.key = key;
         this.pattern = pattern;
         this.createdBy = createdBy;
+        this.createdOn = createdOn;
+        this.matchHits = new ArrayList<MatchHit>(0);
     }
 
     public String getKey() {
